@@ -52,7 +52,7 @@ export default function TopBar({ lang, onLangChange, onBack, onSearchOpen, title
             color: "#FFFFFF",
             letterSpacing: "0.03em",
           }}>
-            {title || "Trattoria Rapisardi"}
+            {title || "Rapisardi"}
           </span>
         </div>
 
