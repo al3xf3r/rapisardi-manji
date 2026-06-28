@@ -12,8 +12,11 @@ async function getMenu(): Promise<MenuCategory[]> {
   const { data, error } = await supabase
     .from("manji_menus")
     .select("categories")
-    .eq("client_id", "rapisardi")
+    .eq("client_id", "ccc71a10-169f-454e-9ec1-f3403ad54153")
     .single();
+
+  console.log("[Rapisardi] data:", JSON.stringify(data));
+  console.log("[Rapisardi] error:", JSON.stringify(error));
 
   if (error || !data) return [];
   return data.categories as MenuCategory[];
@@ -23,3 +26,4 @@ export default async function Home() {
   const categories = await getMenu();
   return <MenuApp initialCategories={categories} />;
 }
+
