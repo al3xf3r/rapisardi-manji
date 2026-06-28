@@ -1,15 +1,16 @@
 "use client";
-import { MENU_CATEGORIES, Lang } from "@/data/menu";
+import { MenuCategory, Lang } from "@/data/menu";
 
 interface HomeViewProps {
   lang: Lang;
+  categories: MenuCategory[];
   onSelectCategory: (slug: string) => void;
 }
 
 const TITLE: Record<Lang, string> = { it: "Il nostro Menu", en: "Our Menu", pl: "Nasze Menu" };
 const SUB: Record<Lang, string> = { it: "Trattoria Casalinga · Dal 1947", en: "Home-style Trattoria · Since 1947", pl: "Tradycyjna Trattoria · Od 1947" };
 
-export default function HomeView({ lang, onSelectCategory }: HomeViewProps) {
+export default function HomeView({ lang, categories, onSelectCategory }: HomeViewProps) {
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", padding: "20px 16px 100px" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
@@ -30,7 +31,7 @@ export default function HomeView({ lang, onSelectCategory }: HomeViewProps) {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        {MENU_CATEGORIES.map((cat) => {
+        {categories.map((cat) => {
           const name = lang === "it" ? cat.nameIT : lang === "en" ? cat.nameEN : cat.namePL;
           return (
             <button

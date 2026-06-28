@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { MENU_CATEGORIES, Lang } from "@/data/menu";
+import { MenuCategory, Lang } from "@/data/menu";
 
 interface SearchResult {
   itemName: string;
@@ -12,6 +12,7 @@ interface SearchResult {
 
 interface SearchOverlayProps {
   lang: Lang;
+  categories: MenuCategory[];
   onClose: () => void;
   onSelectCategory: (slug: string) => void;
 }
@@ -39,7 +40,7 @@ const PLACEHOLDER: Record<Lang, string> = { it: "Cerca nel menu...", en: "Search
 const CLOSE_LABEL: Record<Lang, string> = { it: "Chiudi", en: "Close", pl: "Zamknij" };
 const NO_RESULTS: Record<Lang, string> = { it: "Nessun risultato trovato.", en: "No results found.", pl: "Brak wyników." };
 
-export default function SearchOverlay({ lang, onClose, onSelectCategory }: SearchOverlayProps) {
+export default function SearchOverlay({ lang, categories, onClose, onSelectCategory }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +49,7 @@ export default function SearchOverlay({ lang, onClose, onSelectCategory }: Searc
   const results: SearchResult[] = [];
   if (query.trim().length >= 2) {
     const q = query.toLowerCase();
-    MENU_CATEGORIES.forEach((cat) => {
+    categories.forEach((cat) => {
       const catName = lang === "it" ? cat.nameIT : lang === "en" ? cat.nameEN : cat.namePL;
       cat.groups.forEach((group) => {
         group.items.forEach((item) => {

@@ -1,7 +1,7 @@
 "use client";
-import { MENU_CATEGORIES, Lang, Allergen, ALLERGEN_LABELS } from "@/data/menu";
+import { MenuCategory, Lang, Allergen, ALLERGEN_LABELS } from "@/data/menu";
 
-interface CategoryViewProps { slug: string; lang: Lang; }
+interface CategoryViewProps { category: MenuCategory; lang: Lang; }
 
 function fmtPrice(p: number) { return p.toFixed(2).replace(".", ",") + " €"; }
 
@@ -21,9 +21,8 @@ function AllergenBadge({ allergen, lang }: { allergen: Allergen; lang: Lang }) {
   );
 }
 
-export default function CategoryView({ slug, lang }: CategoryViewProps) {
-  const cat = MENU_CATEGORIES.find((c) => c.slug === slug);
-  if (!cat) return null;
+export default function CategoryView({ category, lang }: CategoryViewProps) {
+  const cat = category;
   const catName = lang === "it" ? cat.nameIT : lang === "en" ? cat.nameEN : cat.namePL;
 
   return (
@@ -59,11 +58,21 @@ export default function CategoryView({ slug, lang }: CategoryViewProps) {
                 const name = lang === "it" ? item.name : lang === "en" ? (item.nameEN || item.name) : (item.namePL || item.name);
                 const desc = lang === "it" ? item.description : lang === "en" ? item.descriptionEN : item.descriptionPL;
                 const allergens = item.allergens ?? [];
+                const available = item.available !== false;
                 return (
-                  <div key={ii} style={{ padding: "16px 0", borderBottom: "1px solid rgba(90,67,49,0.08)" }}>
+                  <div key={ii} style={{
+                    padding: "16px 0",
+                    borderBottom: "1px solid rgba(90,67,49,0.08)",
+                    opacity: available ? 1 : 0.45,
+                  }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.4rem", fontWeight: 600, color: "#2B2B2B", lineHeight: 1.25, marginBottom: desc ? 4 : 0 }}>
+                        <p style={{
+                          fontFamily: "'Cormorant Garamond', serif",
+                          fontSize: "1.4rem", fontWeight: 600, color: "#2B2B2B",
+                          lineHeight: 1.25, marginBottom: desc ? 4 : 0,
+                          textDecoration: available ? "none" : "line-through",
+                        }}>
                           {name}
                         </p>
                         {desc && (
@@ -73,12 +82,12 @@ export default function CategoryView({ slug, lang }: CategoryViewProps) {
                         )}
                         {allergens.length > 0 && (
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: desc ? 0 : 4 }}>
-                            {allergens.map((a) => <AllergenBadge key={a} allergen={a} lang={lang} />)}
+                            {allergens.map((a) => <AllergenBadge key={a} allergen={a as Allergen} lang={lang} />)}
                           </div>
                         )}
                       </div>
                       {item.price != null && (
-                        <span style={{ fontFamily: "'Jost', sans-serif", fontSize: "1.25rem", fontWeight: 700, color: "#2F7D4A", whiteSpace: "nowrap", paddingTop: 1 }}>
+                        <span style={{ fontFamily: "'Jost', sans-serif", fontSize: "1.25rem", fontWeight: 700, color: available ? "#2F7D4A" : "#999", whiteSpace: "nowrap", paddingTop: 1 }}>
                           {fmtPrice(item.price)}
                         </span>
                       )}
